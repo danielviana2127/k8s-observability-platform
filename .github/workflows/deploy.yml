@@ -1,0 +1,37 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Login Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
+      - name: Build imagem
+        run: docker build -t ${{ secrets.DOCKER_USER }}/platform-app:latest ./app
+
+      - name: Push imagem
+        run: docker push ${{ secrets.DOCKER_USER }}/platform-app:latest
+
+      - name: Configurar kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+      - name: Testar conexão com cluster
+        run: kubectl get nodes
+
+      - name: Deploy no Kubernetes
+        run: kubectl apply -k k8s/overlays/dev
+
+      - name: Verificar rollout
+        run: kubectl rollout status deployment/platform-app -n platform-dev
