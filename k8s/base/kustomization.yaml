@@ -8,3 +8,4 @@ resources:
   - app-service.yaml
   - ingress.yaml
   - hpa.yaml
+  - service-monitor.yaml
