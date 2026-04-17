@@ -9,9 +9,12 @@ app = FastAPI()
 # =========================
 # 📊 METRICS (Prometheus)
 # =========================
+from prometheus_client import Counter
+
 REQUEST_COUNT = Counter(
     "app_requests_total",
-    "Total number of requests to the application"
+    "Total number of requests",
+    ["endpoint"]
 )
 
 # =========================
@@ -40,7 +43,7 @@ def get_db_connection():
 
 @app.get("/")
 def root():
-    REQUEST_COUNT.inc()
+    REQUEST_COUNT.labels(endpoint="/").inc()
     return {"message": "API rodando com Kubernetes 🚀"}
 
 
