@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Kubernetes Observability Project
 
 ## 📌 Overview
@@ -42,7 +41,7 @@ Depois da refatoração:
 ```bash
 docker build -t platform-app ./app
 kubectl rollout restart deployment platform-app -n platform-dev
-=======
+
 # 🚀 Kubernetes Platform Project
 
 Projeto completo de aplicação containerizada rodando em Kubernetes com PostgreSQL interno, FastAPI, HPA, Ingress e organização profissional utilizando Kustomize.
@@ -293,4 +292,3 @@ kubectl describe pod NOME_DO_POD -n platform-dev
 **Daniel Viana**
 📧 Email: [daniel-viana2127@yahoo.com](mailto:daniel-viana2127@yahoo.com)
 🔗 GitHub: [https://github.com/danielviana2127](https://github.com/danielviana2127)
->>>>>>> 20f47ac8daf4167191000a3c53c558969a38e227
