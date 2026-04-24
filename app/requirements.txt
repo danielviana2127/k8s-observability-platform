@@ -1,2 +1,9 @@
+<<<<<<< HEAD
 flask
 prometheus-client
+=======
+fastapi==0.110.0
+uvicorn==0.29.0
+psycopg2-binary==2.9.9
+prometheus-client
+>>>>>>> 20f47ac8daf4167191000a3c53c558969a38e227

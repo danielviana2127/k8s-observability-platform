@@ -1,0 +1,23 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Login Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
+      - name: Build imagem
+        run: docker build -t ${{ secrets.DOCKER_USER }}/platform-app:latest ./app
+
+      - name: Push imagem
+        run: docker push ${{ secrets.DOCKER_USER }}/platform-app:latest
