@@ -1,20 +1,13 @@
-# Architecture
+# Arquitetura
 
-This project follows a simple observability pipeline:
+A aplicação segue o fluxo:
 
-User → Service → Pod → Metrics → Prometheus
+Usuário → Service → Pod → /metrics → Prometheus → Grafana
 
-## Components
+## Componentes
 
-- Flask App (instrumented with Prometheus)
-- Kubernetes Deployment
-- Kubernetes Service
-- ServiceMonitor (Prometheus Operator)
-- Prometheus
-
-## Flow
-
-1. User hits the application
-2. Request counter is incremented
-3. Metrics exposed at /metrics
-4. Prometheus scrapes metrics via ServiceMonitor
+- Flask App: expõe métricas
+- Kubernetes Service: expõe aplicação
+- ServiceMonitor: integra com Prometheus
+- Prometheus: coleta métricas
+- Grafana: visualiza métricas

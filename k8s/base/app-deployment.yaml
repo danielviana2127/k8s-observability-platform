@@ -12,33 +12,34 @@ spec:
     metadata:
       labels:
         app: platform-app
+        app.kubernetes.io/name: platform-app
+        app.kubernetes.io/component: backend
     spec:
       containers:
         - name: platform-app
           image: dvianaa/platform-app:latest
+
           ports:
             - containerPort: 8000
-          envFrom:
-            - configMapRef:
-                name: app-config
-            - secretRef:
-                name: app-secret
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "100m"
-            limits:
-              memory: "256Mi"
-              cpu: "500m"
+
           readinessProbe:
             httpGet:
-              path: /health
+              path: /
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10
+
           livenessProbe:
             httpGet:
               path: /health
               port: 8000
             initialDelaySeconds: 10
             periodSeconds: 20
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"

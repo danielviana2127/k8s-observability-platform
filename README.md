@@ -1,181 +1,143 @@
-# Kubernetes Observability Project
+# 🚀 Kubernetes Observability Platform
 
-## 📌 Overview
+Projeto completo de observabilidade utilizando Kubernetes, Prometheus, Grafana e Alertmanager, com deploy estruturado via Kustomize.
 
-This project demonstrates a complete observability pipeline using:
+---
+## 🧪 Projeto 100% funcional
 
-- Python (Flask)
-- Kubernetes
-- Prometheus
-- ServiceMonitor (Prometheus Operator)
+Este projeto foi testado localmente com Minikube e demonstra:
 
-## 🧱 Architecture
+- Coleta de métricas com Prometheus
+- Visualização com Grafana
+- Alertas com Alertmanager (envio real por email)
 
-App → Service → ServiceMonitor → Prometheus
+---
+## 📌 Visão Geral
 
-
-## 🚀 Running locally
-
-```bash
-minikube start
-
-eval $(minikube docker-env)
-docker build -t platform-app ./app
-
-kubectl apply -f k8s/
-
-📊 Metrics
-app_requests_total
-🧠 Key Learnings
-Kubernetes service discovery
-Prometheus scraping
-Debugging metrics exposure issues
-Observability fundamentals
+Este projeto demonstra a construção de um pipeline completo de monitoramento e alerta para uma aplicação Python em ambiente Kubernetes, seguindo boas práticas utilizadas em ambientes reais de produção.
 
 ---
 
-# 🔍 PASSO 9 — TESTE FINAL (RÁPIDO)
-
-Depois da refatoração:
-
-```bash
-docker build -t platform-app ./app
-kubectl rollout restart deployment platform-app -n platform-dev
-
-# 🚀 Kubernetes Platform Project
-
-Projeto completo de aplicação containerizada rodando em Kubernetes com PostgreSQL interno, FastAPI, HPA, Ingress e organização profissional utilizando Kustomize.
-
----
-
-# 📌 Visão Geral
-
-Este projeto demonstra a construção de uma aplicação moderna baseada em microsserviços utilizando:
-
-* ✅ FastAPI (API REST)
-* ✅ PostgreSQL rodando dentro do cluster
-* ✅ Kubernetes (Deployments, Services, HPA, Ingress)
-* ✅ ConfigMap e Secret
-* ✅ Resource Limits
-* ✅ Liveness e Readiness Probes
-* ✅ Estrutura organizada com Kustomize (base + overlays)
-
-O objetivo é simular um ambiente próximo ao utilizado em empresas.
-
----
-
-# 🏗️ Arquitetura do Projeto
+## 🧱 Arquitetura
 
 ```
-k8s-platform-project/
+User → Application (Flask)
+↓
+Prometheus (scraping /metrics)
+↓
+Grafana (visualização)
+↓
+Alertmanager (alertas por email)
+```
+
+---
+
+## ⚙️ Tecnologias Utilizadas
+
+* Python (Flask)
+* Prometheus Client
+* Kubernetes
+* Kustomize
+* Prometheus Operator (kube-prometheus-stack)
+* Grafana
+* Alertmanager
+* Docker
+
+---
+
+## 📦 Estrutura do Projeto
+
+```
+k8s-platform-observability/
 │
 ├── app/
-│   ├── main.py
+│   ├── app.py
 │   ├── requirements.txt
 │   └── Dockerfile
 │
 ├── k8s/
+│   ├── alertmanager-config.yaml
 │   ├── base/
-│   │   ├── namespace.yaml
-│   │   ├── configmap.yaml
-│   │   ├── secret.yaml
-│   │   ├── postgres-deployment.yaml
-│   │   ├── postgres-service.yaml
 │   │   ├── app-deployment.yaml
 │   │   ├── app-service.yaml
-│   │   ├── ingress.yaml
-│   │   ├── hpa.yaml
+│   │   ├── namespace.yaml
+│   │   ├── service-monitor.yaml
+│   │   ├── prometheus-rule.yaml
 │   │   └── kustomization.yaml
 │   │
 │   └── overlays/
 │       └── dev/
 │           └── kustomization.yaml
 │
+├── docs/
+│   └── architecture.md
+│
 └── README.md
 ```
 
 ---
 
-# 🧱 Componentes Kubernetes
+## 📊 Métricas Coletadas
 
-## Namespace
-
-Ambiente isolado chamado `platform-dev`.
-
-## PostgreSQL
-
-* Deployment com 1 réplica
-* Service ClusterIP interno
-* Credenciais configuradas via variáveis de ambiente
-
-## Aplicação FastAPI
-
-* Deployment com 2 réplicas
-* Resource Requests e Limits
-* Liveness Probe
-* Readiness Probe
-* Variáveis injetadas via ConfigMap e Secret
-
-## Service
-
-* Tipo ClusterIP
-* Comunicação interna no cluster
-
-## Ingress
-
-* Roteamento HTTP via host `platform.local`
-
-## HPA
-
-* Escala automática baseada em uso de CPU
-* Mínimo: 2 réplicas
-* Máximo: 5 réplicas
+* `app_requests_total`
+* `process_cpu_seconds_total`
+* `process_resident_memory_bytes`
 
 ---
 
-# ⚙️ Pré-Requisitos
+## 📈 Dashboard (Grafana)
 
-* Docker instalado
-* Kubernetes (Minikube recomendado)
-* kubectl configurado
+### Taxa de Requisições
 
-Se estiver usando Minikube:
+```promql
+sum(rate(app_requests_total[1m]))
+```
 
-```bash
-minikube start
-minikube addons enable ingress
-minikube addons enable metrics-server
+### Total de Requisições
+
+```promql
+sum(app_requests_total)
+```
+
+### Requisições por Endpoint
+
+```promql
+sum by (endpoint) (rate(app_requests_total[1m]))
 ```
 
 ---
 
-# 🐳 Build da Imagem
+## 🚨 Alertas Configurados
 
-Entre na pasta do projeto:
+### 🔸 NoRequests
 
-```bash
-cd k8s-platform-project
+Dispara quando não há requisições:
+
+```promql
+sum(rate(app_requests_total[2m])) == 0
 ```
-
-Build da imagem:
-
-```bash
-docker build -t SEU_DOCKERHUB/platform-app:latest ./app
-```
-
-Push para o Docker Hub:
-
-```bash
-docker push SEU_DOCKERHUB/platform-app:latest
-```
-
-⚠️ Importante: Atualize o arquivo `k8s/base/app-deployment.yaml` com seu usuário do Docker Hub.
 
 ---
 
-# 🚀 Deploy no Kubernetes
+### 🔸 HighRequestRate
 
-Aplicar via Kustomize:
+Dispara quando há alta carga:
+
+```promql
+sum(rate(app_requests_total[1m])) > 5
+```
+
+---
+
+## 🔔 Notificações
+
+* Email via Alertmanager (SMTP Gmail)
+
+---
+
+## 🛠️ Deploy com Kustomize
+
+### Aplicar toda a infraestrutura
 
 ```bash
 kubectl apply -k k8s/overlays/dev
@@ -183,112 +145,86 @@ kubectl apply -k k8s/overlays/dev
 
 ---
 
-# 🔍 Verificação
+## ▶️ Acessos locais
 
-Listar pods:
-
-```bash
-kubectl get pods -n platform-dev
-```
-
-Listar services:
+### Aplicação
 
 ```bash
-kubectl get svc -n platform-dev
-```
-
-Listar ingress:
-
-```bash
-kubectl get ingress -n platform-dev
+kubectl port-forward svc/platform-service -n platform-dev 8080:80
 ```
 
 ---
 
-# 🌐 Acessando a Aplicação
-
-## Opção 1 — Port Forward (Mais simples)
+### Prometheus
 
 ```bash
-kubectl port-forward svc/platform-service 8080:80 -n platform-dev
-```
-
-Acesse:
-
-```
-http://localhost:8080
-```
-
-Endpoints disponíveis:
-
-* `/` → Mensagem principal
-* `/health` → Health check
-* `/db-check` → Teste de conexão com PostgreSQL
-
----
-
-## Opção 2 — Ingress (Minikube)
-
-Obter IP:
-
-```bash
-minikube ip
-```
-
-Adicionar no arquivo hosts:
-
-```
-IP_DO_MINIKUBE platform.local
-```
-
-Acessar:
-
-```
-http://platform.local
+kubectl port-forward svc/monitoring-kube-prometheus-prometheus -n monitoring 9090:9090
 ```
 
 ---
 
-# 🧪 Testando o HPA
-
-Gerar carga manual ou utilizar ferramentas como hey ou ab.
-
-Verificar escalonamento:
+### Grafana
 
 ```bash
-kubectl get hpa -n platform-dev
+kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80
 ```
 
 ---
 
-# 🛠️ Debug
-
-Ver logs de um pod:
+### Alertmanager
 
 ```bash
-kubectl logs NOME_DO_POD -n platform-dev
-```
-
-Descrever pod:
-
-```bash
-kubectl describe pod NOME_DO_POD -n platform-dev
+kubectl port-forward svc/monitoring-kube-prometheus-alertmanager -n monitoring 9093:9093
 ```
 
 ---
 
-# 📈 Próximos Passos
+## 🧪 Testes
 
-* Migrar PostgreSQL para StatefulSet + PVC
-* Converter projeto para Helm
-* Implementar CI com GitHub Actions
-* Evoluir para GitOps com ArgoCD
-* Adicionar Observabilidade (Prometheus + Grafana)
+### Gerar carga
+
+```bash
+for i in {1..200}; do curl http://localhost:8080/; done
+```
 
 ---
 
-# 👨‍💻 Autor
+## 🎯 Objetivo
 
-**Daniel Viana**
-📧 Email: [daniel-viana2127@yahoo.com](mailto:daniel-viana2127@yahoo.com)
-🔗 GitHub: [https://github.com/danielviana2127](https://github.com/danielviana2127)
+Demonstrar conhecimento prático em:
+
+* Observabilidade
+* Monitoramento
+* Alertas
+* Kubernetes
+* Kustomize
+* DevOps / SRE
+
+---
+
+## 📸 Evidências
+
+### Prometheus Targets
+![Prometheus Targets](docs/images/prometheus-targets.png)
+
+### Prometheus Query
+![Prometheus Query](docs/images/prometheus-query.png)
+
+### Prometheus Alerts
+![Prometheus Alerts](docs/images/prometheus-alerts.png)
+
+### Grafana Dashboard
+![Grafana](docs/images/grafana-dashboard.png)
+
+### Kubernetes Pods
+![Pods](docs/images/kubectl-pods.png)
+
+### Services & Endpoints
+![Services](docs/images/k8s-services.png)
+
+---
+
+## 👨‍💻 Autor
+
+Daniel Viana
+

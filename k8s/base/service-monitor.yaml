@@ -2,12 +2,16 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: platform-app
+  namespace: platform-dev
   labels:
-    release: monitoring
+    release: monitoring   # ← CRÍTICO
 spec:
   selector:
     matchLabels:
-      app: platform-app
+      app: platform-app   # ← TEM QUE BATER COM O SERVICE
+  namespaceSelector:
+    matchNames:
+      - platform-dev
   endpoints:
     - port: http
       path: /metrics

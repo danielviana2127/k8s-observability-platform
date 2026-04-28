@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: platform-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: platform.rules
+      rules:
+
+        # 🚨 ALERTA 1 — SEM REQUISIÇÕES (VERSÃO PROFISSIONAL)
+        - alert: NoRequests
+          expr: sum(rate(app_requests_total[2m])) == 0
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Sem requisições"
+            description: "A aplicação não recebeu requisições nos últimos 2 minutos."
+
+        # 🔥 ALERTA 2 — ALTA TAXA DE REQUISIÇÕES
+        - alert: HighRequestRate
+          expr: sum(rate(app_requests_total[1m])) > 5
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Alta taxa de requisições"
+            description: "A aplicação está recebendo muitas requisições por segundo."

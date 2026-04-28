@@ -3,10 +3,12 @@ kind: Service
 metadata:
   name: platform-service
   namespace: platform-dev
+  labels:
+    app: platform-app   # ← ESSA LABEL PRECISA EXISTIR
 spec:
-  type: ClusterIP
   selector:
     app: platform-app
   ports:
-    - port: 80
+    - name: http        # ← TEM QUE SER ESSE NOME
+      port: 80
       targetPort: 8000
