@@ -48,7 +48,7 @@ Alertmanager (alertas por email)
 ## 📦 Estrutura do Projeto
 
 ```
-k8s-platform-observability/
+k8s-observability-platform/
 │
 ├── app/
 │   ├── app.py
