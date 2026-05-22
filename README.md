@@ -160,6 +160,21 @@ Validações executadas
 
 ---
 
+🚀 GitOps com ArgoCD
+
+O projeto utiliza ArgoCD para sincronização automática dos manifests Kubernetes diretamente do GitHub.
+
+* Fluxo GitOps
+* GitHub → ArgoCD → Kubernetes
+* Funcionalidades
+* Sincronização automática
+* Deploy declarativo
+* Versionamento da infraestrutura
+* Git como source of truth
+* Continuous Delivery para Kubernetes
+
+---
+
 ## 🛠️ Deploy com Kustomize
 
 ### Aplicar toda infraestrutura
