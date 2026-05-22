@@ -3,31 +3,36 @@
 Projeto completo de observabilidade utilizando Kubernetes, Prometheus, Grafana e Alertmanager, com deploy estruturado via Kustomize.
 
 ---
-## 🧪 Projeto 100% funcional
+## 🧪 Projeto 100% Funcional
 
 Este projeto foi testado localmente com Minikube e demonstra:
 
 - Coleta de métricas com Prometheus
-- Visualização com Grafana
-- Alertas com Alertmanager (envio real por email)
+- Visualização de métricas com Grafana
+- Sistema de alertas utilizando Alertmanager
+- Deploy declarativo utilizando Kustomize
+- Pipeline CI/CD utilizando GitHub Actions
+- Troubleshooting e debugging em Kubernetes
 
 ---
 ## 📌 Visão Geral
 
-Este projeto demonstra a construção de um pipeline completo de monitoramento e alerta para uma aplicação Python em ambiente Kubernetes, seguindo boas práticas utilizadas em ambientes reais de produção.
+Este projeto demonstra a construção de uma plataforma completa de observabilidade para aplicações Kubernetes, seguindo práticas modernas utilizadas em ambientes cloud-native e DevOps.
+
+A aplicação Flask expõe métricas customizadas via Prometheus Client, permitindo monitoramento, criação de dashboards e geração de alertas automatizados.
 
 ---
 
 ## 🧱 Arquitetura
 
 ```
-User → Application (Flask)
-↓
-Prometheus (scraping /metrics)
-↓
-Grafana (visualização)
-↓
-Alertmanager (alertas por email)
+User → Flask Application
+           ↓
+Prometheus → Métricas
+           ↓
+Grafana → Dashboards
+           ↓
+Alertmanager → Alertas por Email
 ```
 
 ---
@@ -42,6 +47,8 @@ Alertmanager (alertas por email)
 * Grafana
 * Alertmanager
 * Docker
+* GitHub Actions
+* Minikube
 
 ---
 
@@ -79,6 +86,8 @@ k8s-observability-platform/
 
 ## 📊 Métricas Coletadas
 
+As seguintes métricas são coletadas pela aplicação:
+
 * `app_requests_total`
 * `process_cpu_seconds_total`
 * `process_resident_memory_bytes`
@@ -111,7 +120,7 @@ sum by (endpoint) (rate(app_requests_total[1m]))
 
 ### 🔸 NoRequests
 
-Dispara quando não há requisições:
+Dispara quando a aplicação não recebe requisições:
 
 ```promql
 sum(rate(app_requests_total[2m])) == 0
@@ -121,7 +130,7 @@ sum(rate(app_requests_total[2m])) == 0
 
 ### 🔸 HighRequestRate
 
-Dispara quando há alta carga:
+Dispara quando há alta taxa de requisições:
 
 ```promql
 sum(rate(app_requests_total[1m])) > 5
@@ -129,15 +138,31 @@ sum(rate(app_requests_total[1m])) > 5
 
 ---
 
-## 🔔 Notificações
+## 🔔 Sistema de Notificações
 
-* Email via Alertmanager (SMTP Gmail)
+Alertas enviados utilizando:
+
+* Alertmanager
+* SMTP Gmail
+
+---
+
+## 🔄 CI/CD Pipeline
+
+O Projeto possui pipeline automatizada utilizando GitHub Actions.
+
+Validações executadas
+
+* Checkout do código
+* Build da imagem Docker
+* Validação de manifests Kubernetes
+* Validação Kustomize
 
 ---
 
 ## 🛠️ Deploy com Kustomize
 
-### Aplicar toda a infraestrutura
+### Aplicar toda infraestrutura
 
 ```bash
 kubectl apply -k k8s/overlays/dev
@@ -145,7 +170,7 @@ kubectl apply -k k8s/overlays/dev
 
 ---
 
-## ▶️ Acessos locais
+## ▶️ Acessos Locais
 
 ### Aplicação
 
@@ -181,11 +206,41 @@ kubectl port-forward svc/monitoring-kube-prometheus-alertmanager -n monitoring 9
 
 ## 🧪 Testes
 
-### Gerar carga
+### Gerar carga na aplicação
 
 ```bash
 for i in {1..200}; do curl http://localhost:8080/; done
 ```
+
+---
+
+## 🛠️ Troubleshooting Realizado
+
+Durante o desenvolvimento deste projeto foram realizados diversos diagnósticos e troubleshooting em Kubernetes:
+
+* CrashLoopBackOff em containers
+* Ajuste de readiness/liveness probes
+* Diagnóstico utilizando kubectl logs
+* Diagnóstico utilizando kubectl describe
+* Troubleshooting de recursos no Minikube
+* Debugging de deployments Kubernetes
+
+---
+
+# 📚 Lessons Learned
+
+Principais conhecimentos adquiridos durante o projeto:
+
+* Observabilidade em Kubernetes
+* Monitoramento com Prometheus
+* Dashboards com Grafana
+* Gerenciamento de alertas
+* Deploy declarativo com Kustomize
+* Automação CI/CD
+* Troubleshooting Kubernetes
+* Kubernetes probes
+* Containers e Docker
+* Debugging de infraestrutura
 
 ---
 
@@ -198,7 +253,10 @@ Demonstrar conhecimento prático em:
 * Alertas
 * Kubernetes
 * Kustomize
-* DevOps / SRE
+* DevOps
+* SRE
+* CI/CD
+* Troubleshooting
 
 ---
 
