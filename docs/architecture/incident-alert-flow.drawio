@@ -1,0 +1,74 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="F9e1vikRCG1FUCxVzkfh">
+    <mxGraphModel dx="1005" dy="706" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-7" edge="1" parent="1" source="QbxcG1PKsrWAUM-DqSyA-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="QbxcG1PKsrWAUM-DqSyA-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-12" connectable="0" parent="QbxcG1PKsrWAUM-DqSyA-7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Application Failure" vertex="1">
+          <mxGeometry relative="1" x="-0.04" y="-1" as="geometry">
+            <mxPoint x="52" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Nginx Deployment" vertex="1">
+          <mxGeometry height="60" width="186" x="321" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-8" edge="1" parent="1" source="QbxcG1PKsrWAUM-DqSyA-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="QbxcG1PKsrWAUM-DqSyA-3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-13" connectable="0" parent="QbxcG1PKsrWAUM-DqSyA-8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Metrics Updated" vertex="1">
+          <mxGeometry relative="1" x="0.0213" y="-1" as="geometry">
+            <mxPoint x="48" y="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Incident Simulation&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Kubectl scale&lt;/div&gt;&lt;div&gt;replicas=0&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="186" x="321" y="202" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-9" edge="1" parent="1" source="QbxcG1PKsrWAUM-DqSyA-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="QbxcG1PKsrWAUM-DqSyA-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-14" connectable="0" parent="QbxcG1PKsrWAUM-DqSyA-9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Query Evaluation" vertex="1">
+          <mxGeometry relative="1" x="-0.3333" y="3" as="geometry">
+            <mxPoint x="46" y="14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Prometheus&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Detects Metric Change&lt;/div&gt;" vertex="1">
+          <mxGeometry height="83" width="186" x="321" y="329" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-10" edge="1" parent="1" source="QbxcG1PKsrWAUM-DqSyA-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="QbxcG1PKsrWAUM-DqSyA-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-16" connectable="0" parent="QbxcG1PKsrWAUM-DqSyA-10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Threshold Breached" vertex="1">
+          <mxGeometry relative="1" x="0.0667" y="1" as="geometry">
+            <mxPoint x="55" y="5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Grafana Alert Rule&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Deployment Unavailable&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="186" x="321" y="458" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-11" edge="1" parent="1" source="QbxcG1PKsrWAUM-DqSyA-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="QbxcG1PKsrWAUM-DqSyA-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-17" connectable="0" parent="QbxcG1PKsrWAUM-DqSyA-11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Notification" vertex="1">
+          <mxGeometry relative="1" x="0.1364" as="geometry">
+            <mxPoint x="35" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Alert Fired&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Status: Firing&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="186" x="321" y="584" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;DevOps Engineer&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Investigates Incident&lt;/div&gt;" vertex="1">
+          <mxGeometry height="76" width="186" x="321" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=20;fontStyle=1" value="Kubernetes Incident Response Flow" vertex="1">
+          <mxGeometry height="30" width="349.5" x="250.5" y="11" as="geometry" />
+        </mxCell>
+        <mxCell id="QbxcG1PKsrWAUM-DqSyA-19" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Monitoring • Alerting • Incident Detection • Response" vertex="1">
+          <mxGeometry height="30" width="360" x="234" y="42" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

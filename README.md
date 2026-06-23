@@ -1,183 +1,277 @@
 # 🚀 Kubernetes Observability Platform
 
-Projeto completo de observabilidade utilizando Kubernetes, Prometheus, Grafana e Alertmanager, com deploy estruturado via Kustomize.
+Projeto de observabilidade Kubernetes desenvolvido com Prometheus, Grafana e Alertmanager em ambiente local utilizando Minikube.
 
----
-## 🧪 Projeto 100% Funcional
-
-Este projeto foi testado localmente com Minikube e demonstra:
-
-- Coleta de métricas com Prometheus
-- Visualização de métricas com Grafana
-- Sistema de alertas utilizando Alertmanager
-- Deploy declarativo utilizando Kustomize
-- Pipeline CI/CD utilizando GitHub Actions
-- Troubleshooting e debugging em Kubernetes
-
----
-## 📌 Visão Geral
-
-Este projeto demonstra a construção de uma plataforma completa de observabilidade para aplicações Kubernetes, seguindo práticas modernas utilizadas em ambientes cloud-native e DevOps.
-
-A aplicação Flask expõe métricas customizadas via Prometheus Client, permitindo monitoramento, criação de dashboards e geração de alertas automatizados.
+O objetivo é demonstrar competências práticas em Monitoramento, Observabilidade, Alertas, Resposta a Incidentes, Troubleshooting e Administração de Kubernetes.
 
 ---
 
-## 🧱 Arquitetura
+# 📌 Visão Geral
 
-```
-User → Flask Application
-           ↓
-Prometheus → Métricas
-           ↓
-Grafana → Dashboards
-           ↓
-Alertmanager → Alertas por Email
-```
+Esta plataforma de observabilidade foi desenvolvida para monitorar workloads Kubernetes utilizando Prometheus, Grafana e Alertmanager em um ambiente local baseado em Minikube.
+
+O projeto demonstra a implementação de um pipeline completo de observabilidade, incluindo:
+
+* Coleta de métricas de infraestrutura e aplicações
+* Criação de dashboards customizados
+* Configuração de alertas
+* Simulação de incidentes
+* Resposta a incidentes
+* Notificações por e-mail
+* Documentação arquitetural
+* Troubleshooting em Kubernetes
+
+Durante o desenvolvimento foram criados dashboards específicos para CPU, memória, disponibilidade e visão geral do cluster, além da validação de um fluxo real de detecção e tratamento de incidentes.
 
 ---
 
-## ⚙️ Tecnologias Utilizadas
+# 🏗️ Arquitetura
 
-* Python (Flask)
-* Prometheus Client
-* Kubernetes
-* Kustomize
-* Prometheus Operator (kube-prometheus-stack)
+![Platform Architecture](docs/architecture/platform-architecture.png)
+
+## Componentes
+
+* Kubernetes (Minikube)
+* Prometheus
 * Grafana
 * Alertmanager
-* Docker
-* GitHub Actions
-* Minikube
+* Node Exporter
+* kube-state-metrics
+* Nginx Deployment
+
+## Fluxo de Monitoramento
+
+Nginx Deployment → Kubernetes Metrics → Prometheus → Grafana Dashboards → Alertmanager → Email Notification
 
 ---
 
-## 📦 Estrutura do Projeto
+# 🚨 Fluxo de Resposta a Incidentes
 
-```
-k8s-observability-platform/
-│
+![Incident Flow](docs/architecture/incident-alert-flow.png)
+
+Fluxo validado durante a simulação de incidente:
+
+Nginx Deployment → Incident Simulation → Prometheus → Grafana Alert Rule → Alert Fired → DevOps Engineer
+
+---
+
+# ⚙️ Tecnologias Utilizadas
+
+* Kubernetes
+* Minikube
+* Docker
+* Prometheus
+* Grafana
+* Alertmanager
+* Node Exporter
+* kube-state-metrics
+* Git
+* GitHub
+* Linux
+* YAML
+
+---
+
+# 📂 Estrutura do Projeto
+
+```text
+k8s-observability-platform
 ├── app/
-│   ├── app.py
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── k8s/
-│   ├── alertmanager-config.yaml
-│   ├── base/
-│   │   ├── app-deployment.yaml
-│   │   ├── app-service.yaml
-│   │   ├── namespace.yaml
-│   │   ├── service-monitor.yaml
-│   │   ├── prometheus-rule.yaml
-│   │   └── kustomization.yaml
-│   │
-│   └── overlays/
-│       └── dev/
-│           └── kustomization.yaml
-│
+├── dashboards/
 ├── docs/
-│   └── architecture.md
-│
+│   ├── architecture/
+│   ├── incidents/
+│   └── screenshots/
+├── k8s/
+├── monitoring/
 └── README.md
 ```
 
 ---
 
-## 📊 Métricas Coletadas
+# 📊 Dashboards
 
-As seguintes métricas são coletadas pela aplicação:
+O projeto possui dashboards customizados desenvolvidos no Grafana.
 
-* `app_requests_total`
-* `process_cpu_seconds_total`
-* `process_resident_memory_bytes`
+## Cluster Overview
+
+* CPU Usage %
+* Memory Usage %
+* Running Pods
+* Available Replicas
+
+![Cluster Overview](docs/screenshots/cluster-overview-dashboard.png)
 
 ---
 
-## 📈 Dashboard (Grafana)
+## Cluster CPU
 
-### Taxa de Requisições
+* CPU Usage %
+* CPU Idle %
+* CPU Busy %
+
+![Cluster CPU](docs/screenshots/cluster-cpu-dashboard.png)
+
+---
+
+## Cluster Memory
+
+* Memory Usage %
+* Total Memory (GB)
+* Available Memory (GB)
+* Used Memory (GB)
+
+![Cluster Memory](docs/screenshots/cluster-memory-dashboard.png)
+
+---
+
+## Cluster Availability
+
+* Running Pods
+* Failed Pods
+* Pending Pods
+* Available Replicas
+* Desired Replicas
+
+![Cluster Availability](docs/screenshots/cluster-availability-dashboard.png)
+
+---
+
+# 📈 Métricas Monitoradas
+
+## CPU Usage
 
 ```promql
-sum(rate(app_requests_total[1m]))
+100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
 ```
 
-### Total de Requisições
+## Memory Usage
 
 ```promql
-sum(app_requests_total)
+(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
 ```
 
-### Requisições por Endpoint
+## Running Pods
 
 ```promql
-sum by (endpoint) (rate(app_requests_total[1m]))
+count(kube_pod_status_phase{phase="Running"})
 ```
 
----
-
-## 🚨 Alertas Configurados
-
-### 🔸 NoRequests
-
-Dispara quando a aplicação não recebe requisições:
+## Available Replicas
 
 ```promql
-sum(rate(app_requests_total[2m])) == 0
+sum(kube_deployment_status_replicas_available)
 ```
 
 ---
 
-### 🔸 HighRequestRate
+# 🔔 Alertas
 
-Dispara quando há alta taxa de requisições:
+## Deployment Unavailable
+
+Monitoramento:
 
 ```promql
-sum(rate(app_requests_total[1m])) > 5
+kube_deployment_status_replicas_available
+```
+
+Condição:
+
+```text
+Available Replicas < 1
+```
+
+Objetivo:
+
+Detectar indisponibilidade de workloads Kubernetes.
+
+---
+
+# 📧 Notificações por E-mail
+
+Os alertas podem ser encaminhados por e-mail utilizando Alertmanager.
+
+Evidência de notificação recebida:
+
+![Email Notification](docs/screenshots/alert-email-notification.png)
+
+---
+
+# 🧪 Simulação de Incidente
+
+Para validar o pipeline de observabilidade foi realizada uma simulação controlada de falha.
+
+## Cenário
+
+Escalonamento do deployment para zero réplicas:
+
+```bash
+kubectl scale deployment nginx-deployment \
+--replicas=0 \
+-n development
+```
+
+## Resultado Obtido
+
+* Aplicação indisponível
+* Métricas atualizadas
+* Prometheus detectou alteração
+* Grafana avaliou a regra
+* Alerta disparado
+* Processo de investigação iniciado
+
+Documentação completa:
+
+```text
+docs/incidents/nginx-deployment-unavailable.md
 ```
 
 ---
 
-## 🔔 Sistema de Notificações
+# 📸 Evidências
 
-Alertas enviados utilizando:
+## Prometheus Targets
 
-* Alertmanager
-* SMTP Gmail
+![Prometheus Targets](docs/screenshots/prometheus-targets.png)
 
----
+## Prometheus Query
 
-## 🔄 CI/CD Pipeline
+![Prometheus Query](docs/screenshots/prometheus-query.png)
 
-O Projeto possui pipeline automatizada utilizando GitHub Actions.
+## Prometheus Alerts
 
-Validações executadas
+![Prometheus Alerts](docs/screenshots/prometheus-alerts.png)
 
-* Checkout do código
-* Build da imagem Docker
-* Validação de manifests Kubernetes
-* Validação Kustomize
+## Kubernetes Pods
 
----
+![Pods](docs/screenshots/kubectl-pods.png)
 
-🚀 GitOps com ArgoCD
+## Kubernetes Services
 
-O projeto utiliza ArgoCD para sincronização automática dos manifests Kubernetes diretamente do GitHub.
-
-* Fluxo GitOps
-* GitHub → ArgoCD → Kubernetes
-* Funcionalidades
-* Sincronização automática
-* Deploy declarativo
-* Versionamento da infraestrutura
-* Git como source of truth
-* Continuous Delivery para Kubernetes
+![Services](docs/screenshots/k8s-services.png)
 
 ---
 
-## 🛠️ Deploy com Kustomize
+# 📦 Dashboards Exportados
 
-### Aplicar toda infraestrutura
+Os dashboards estão disponíveis para importação na pasta:
+
+```text
+dashboards/
+```
+
+Arquivos:
+
+* cluster-overview.json
+* cluster-availability.json
+* cluster-cpu.json
+* cluster-memory.json
+
+---
+
+# 🛠️ Deploy
+
+Aplicar manifests:
 
 ```bash
 kubectl apply -k k8s/overlays/dev
@@ -185,119 +279,32 @@ kubectl apply -k k8s/overlays/dev
 
 ---
 
-## ▶️ Acessos Locais
+# 📚 Habilidades Demonstradas
 
-### Aplicação
-
-```bash
-kubectl port-forward svc/platform-service -n platform-dev 8080:80
-```
-
----
-
-### Prometheus
-
-```bash
-kubectl port-forward svc/monitoring-kube-prometheus-prometheus -n monitoring 9090:9090
-```
-
----
-
-### Grafana
-
-```bash
-kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80
-```
-
----
-
-### Alertmanager
-
-```bash
-kubectl port-forward svc/monitoring-kube-prometheus-alertmanager -n monitoring 9093:9093
-```
-
----
-
-## 🧪 Testes
-
-### Gerar carga na aplicação
-
-```bash
-for i in {1..200}; do curl http://localhost:8080/; done
-```
-
----
-
-## 🛠️ Troubleshooting Realizado
-
-Durante o desenvolvimento deste projeto foram realizados diversos diagnósticos e troubleshooting em Kubernetes:
-
-* CrashLoopBackOff em containers
-* Ajuste de readiness/liveness probes
-* Diagnóstico utilizando kubectl logs
-* Diagnóstico utilizando kubectl describe
-* Troubleshooting de recursos no Minikube
-* Debugging de deployments Kubernetes
-
----
-
-# 📚 Lessons Learned
-
-Principais conhecimentos adquiridos durante o projeto:
-
-* Observabilidade em Kubernetes
-* Monitoramento com Prometheus
-* Dashboards com Grafana
-* Gerenciamento de alertas
-* Deploy declarativo com Kustomize
-* Automação CI/CD
-* Troubleshooting Kubernetes
-* Kubernetes probes
-* Containers e Docker
-* Debugging de infraestrutura
-
----
-
-## 🎯 Objetivo
-
-Demonstrar conhecimento prático em:
-
+* Kubernetes
 * Observabilidade
 * Monitoramento
-* Alertas
-* Kubernetes
-* Kustomize
+* Prometheus
+* Grafana
+* Alertmanager
+* Linux
+* YAML
 * DevOps
-* SRE
-* CI/CD
+* SRE Fundamentals
+* Incident Response
 * Troubleshooting
+* Dashboard Creation
+* Alerting
+* Infrastructure Monitoring
 
 ---
 
-## 📸 Evidências
+# 🎯 Objetivo Profissional
 
-### Prometheus Targets
-![Prometheus Targets](docs/images/prometheus-targets.png)
-
-### Prometheus Query
-![Prometheus Query](docs/images/prometheus-query.png)
-
-### Prometheus Alerts
-![Prometheus Alerts](docs/images/prometheus-alerts.png)
-
-### Grafana Dashboard
-![Grafana](docs/images/grafana-dashboard.png)
-
-### Kubernetes Pods
-![Pods](docs/images/kubectl-pods.png)
-
-### Services & Endpoints
-![Services](docs/images/k8s-services.png)
+Este projeto foi desenvolvido como laboratório prático para consolidação de conhecimentos em DevOps, Observabilidade e Kubernetes, simulando cenários comuns encontrados em ambientes de produção.
 
 ---
 
-## 👨‍💻 Autor
+# 👨‍💻 Autor
 
 Daniel Viana
-

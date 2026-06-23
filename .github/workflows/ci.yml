@@ -1,24 +1,35 @@
-name: CI - Kubernetes Platform App
+name: CI - Kubernetes Observability Platform
 
 on:
   push:
     branches:
       - main
 
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar Docker
+      - name: Configurar Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build da imagem
+      - name: Build da imagem Docker
         run: docker build -t platform-app ./app
 
-      - name: Validar YAML Kubernetes
+      - name: Instalar kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Validar manifests Kubernetes
         run: |
-          kubectl apply --dry-run=client -f k8s/
+          find k8s -name "*.yaml" -o -name "*.yml"
+
+      - name: Validar Kustomize
+        run: |
+          kubectl kustomize k8s/overlays/dev > /dev/null

@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+
+metadata:
+  name: deployment-unavailable
+  namespace: monitoring
+
+spec:
+  groups:
+  - name: kubernetes-alerts
+
+    rules:
+
+    - alert: DeploymentUnavailable
+
+      expr: kube_deployment_status_replicas_available < kube_deployment_spec_replicas
+
+      for: 1m
+
+      labels:
+        severity: critical
+
+      annotations:
+        summary: Deployment unavailable
+        description: Deployment has fewer available replicas than desired replicas for more than 1 minute.
